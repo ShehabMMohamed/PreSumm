@@ -185,15 +185,13 @@ class DataIterator(object):
         xs = self.dataset
         return xs
 
-
-
-
-
-
     def preprocess(self, ex, is_test):
         src = ex['src']
-        tgt = ex['tgt'][:self.args.max_tgt_len][:-1]+[2]
-        src_sent_labels = ex['src_sent_labels']
+        if('labels' in ex):
+            labels = ex['labels']
+        else:
+            labels = ex['src_sent_labels']
+
         segs = ex['segs']
         if(not self.args.use_interval):
             segs=[0]*len(segs)
@@ -201,20 +199,10 @@ class DataIterator(object):
         src_txt = ex['src_txt']
         tgt_txt = ex['tgt_txt']
 
-        end_id = [src[-1]]
-        src = src[:-1][:self.args.max_pos - 1] + end_id
-        segs = segs[:self.args.max_pos]
-        max_sent_id = bisect.bisect_left(clss, self.args.max_pos)
-        src_sent_labels = src_sent_labels[:max_sent_id]
-        clss = clss[:max_sent_id]
-        # src_txt = src_txt[:max_sent_id]
-
-
-
         if(is_test):
-            return src, tgt, segs, clss, src_sent_labels, src_txt, tgt_txt
+            return src,labels,segs, clss, src_txt, tgt_txt
         else:
-            return src, tgt, segs, clss, src_sent_labels
+            return src,labels,segs, clss
 
     def batch_buffer(self, data, batch_size):
         minibatch, size_so_far = [], 0
