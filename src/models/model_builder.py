@@ -12,8 +12,8 @@ from models.optimizers import Optimizer
 ### START MODIFYING ###
 import sys
 # Add MobileBert_PyTorch
-sys.path.insert(1, '../../MobileBert_PyTorch')
-from model.modeling_mobilebert import MobileBertConfig, MobileBertModel
+# sys.path.insert(1, '../../MobileBert_PyTorch')
+# from model.modeling_mobilebert import MobileBertConfig, MobileBertModel
 ### END MODIFYING ###
 
 def build_optim(args, model, checkpoint):
@@ -129,8 +129,8 @@ class Bert(nn.Module):
         ### Start Modifying ###
         elif other_bert == 'distilbert':
             self.model = DistilBertModel.from_pretrained('distilbert-base-uncased', cache_dir=temp_dir)
-        elif other_bert == 'mobilebert':
-            self.model = MobileBertModel.from_pretrained('../../MobileBert_PyTorch/prev_trained_model/mobilebert')
+        # elif other_bert == 'mobilebert':
+        #     self.model = MobileBertModel.from_pretrained('../../MobileBert_PyTorch/prev_trained_model/mobilebert')
         ### End Modifying ###
 
         else:
