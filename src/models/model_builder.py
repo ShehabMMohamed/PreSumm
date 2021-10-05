@@ -144,7 +144,7 @@ class Bert(nn.Module):
     def forward(self, x, segs, mask):
         ### Start Modifying ###
         # No token_type_ids for DistilBertModel
-        if self.other_bert == 'distilbert':
+        if self.other_bert == 'distilbert' or self.other_bert == 'squeezebert':
             if(self.finetune):
                 top_vec = self.model(input_ids=x, attention_mask=mask)[0]
             else:
