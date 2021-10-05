@@ -3,6 +3,7 @@ import copy
 import torch
 import torch.nn as nn
 from transformers import BertConfig, BertModel, DistilBertConfig, DistilBertModel
+from transformers import SqueezeBertModel, SqueezeBertConfig
 from torch.nn.init import xavier_uniform_
 
 from models.decoder import TransformerDecoder
@@ -129,6 +130,8 @@ class Bert(nn.Module):
         ### Start Modifying ###
         elif other_bert == 'distilbert':
             self.model = DistilBertModel.from_pretrained('distilbert-base-uncased', cache_dir=temp_dir)
+        elif other_bert == 'squeezebert':
+            self.model = SqueezeBertModel.from_pretrained('squeezebert/squeezebert-uncased')
         # elif other_bert == 'mobilebert':
         #     self.model = MobileBertModel.from_pretrained('../../MobileBert_PyTorch/prev_trained_model/mobilebert')
         ### End Modifying ###
