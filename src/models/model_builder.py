@@ -4,18 +4,13 @@ import torch
 import torch.nn as nn
 from transformers import BertConfig, BertModel, DistilBertConfig, DistilBertModel
 from transformers import SqueezeBertModel, SqueezeBertConfig
+from transformers import MobileBertModel, MobileBertConfig
 from torch.nn.init import xavier_uniform_
 
 from models.decoder import TransformerDecoder
 from models.encoder import Classifier, ExtTransformerEncoder
 from models.optimizers import Optimizer
 
-### START MODIFYING ###
-import sys
-# Add MobileBert_PyTorch
-# sys.path.insert(1, '../../MobileBert_PyTorch')
-# from model.modeling_mobilebert import MobileBertConfig, MobileBertModel
-### END MODIFYING ###
 
 def build_optim(args, model, checkpoint):
     """ Build optimizer """
@@ -127,14 +122,13 @@ class Bert(nn.Module):
         if(large):
             self.model = BertModel.from_pretrained('bert-large-uncased', cache_dir=temp_dir)
 
-        ### Start Modifying ###
+        ### Fine-tune different BERT Models ###
         elif other_bert == 'distilbert':
             self.model = DistilBertModel.from_pretrained('distilbert-base-uncased', cache_dir=temp_dir)
         elif other_bert == 'squeezebert':
             self.model = SqueezeBertModel.from_pretrained('squeezebert/squeezebert-uncased')
-        # elif other_bert == 'mobilebert':
-        #     self.model = MobileBertModel.from_pretrained('../../MobileBert_PyTorch/prev_trained_model/mobilebert')
-        ### End Modifying ###
+        elif other_bert == 'mobilebert':
+            self.model = SqueezeBertModel.from_pretrained('google/mobilebert-uncased')
 
         else:
             self.model = BertModel.from_pretrained('bert-base-uncased', cache_dir=temp_dir)
@@ -144,7 +138,7 @@ class Bert(nn.Module):
     def forward(self, x, segs, mask):
         ### Start Modifying ###
         # No token_type_ids for DistilBertModel
-        if self.other_bert == 'distilbert' or self.other_bert == 'squeezebert':
+        if self.other_bert == 'distilbert' or self.other_bert == 'squeezebert' or self.other_bert == 'mobile_bert':
             if(self.finetune):
                 top_vec = self.model(input_ids=x, attention_mask=mask)[0]
             else:
