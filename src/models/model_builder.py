@@ -128,7 +128,7 @@ class Bert(nn.Module):
         elif other_bert == 'squeezebert':
             self.model = SqueezeBertModel.from_pretrained('squeezebert/squeezebert-uncased')
         elif other_bert == 'mobilebert':
-            self.model = SqueezeBertModel.from_pretrained('google/mobilebert-uncased')
+            self.model = MobileBertModel.from_pretrained('google/mobilebert-uncased')
 
         else:
             self.model = BertModel.from_pretrained('bert-base-uncased', cache_dir=temp_dir)
@@ -138,7 +138,7 @@ class Bert(nn.Module):
     def forward(self, x, segs, mask):
         ### Start Modifying ###
         # No token_type_ids for DistilBertModel
-        if self.other_bert == 'distilbert' or self.other_bert == 'squeezebert' or self.other_bert == 'mobile_bert':
+        if self.other_bert == 'distilbert' or self.other_bert == 'squeezebert' or self.other_bert == 'mobilebert':
             if(self.finetune):
                 top_vec = self.model(input_ids=x, attention_mask=mask)[0]
             else:
